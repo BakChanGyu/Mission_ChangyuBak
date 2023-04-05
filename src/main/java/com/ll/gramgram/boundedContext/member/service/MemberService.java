@@ -3,7 +3,7 @@ package com.ll.gramgram.boundedContext.member.service;
 import com.ll.gramgram.base.rsData.RsData;
 import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
 import com.ll.gramgram.boundedContext.member.entity.Member;
-import com.ll.gramgram.boundedContext.member.repository.MemberRepository;
+import com.ll.gramgram.base.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

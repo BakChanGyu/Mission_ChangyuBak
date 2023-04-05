@@ -147,6 +147,21 @@ public class LikeablePersonControllerTests {
                 .andExpect(content().string(containsString("""
                         <span class="toInstaMember_attractiveTypeDisplayName">성격</span>
                         """.stripIndent().trim())));
-        ;
+    }
+
+    @Test
+    @DisplayName("호감표시 삭제")
+    @WithUserDetails("KAKAO__2733197240")
+    void t006() throws Exception {
+        // WHEN
+        ResultActions resultActions = mvc
+                .perform(get("/likeablePerson/delete/3"))
+                .andDo(print());
+
+        // THEN
+        resultActions
+                .andExpect(handler().handlerType(LikeablePersonController.class))
+                .andExpect(handler().methodName("delete"))
+                .andExpect(status().is3xxRedirection());
     }
 }
