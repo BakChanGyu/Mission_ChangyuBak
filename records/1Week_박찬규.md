@@ -46,4 +46,10 @@ id가 존재하지 않는 경우 해당 likeablePerson이 없음을 알리는 �
   카카오/구글 서버에 저장돼있는 토큰 때문으로 추측된다.
 
 **[Refactoring]**
-- [ ] 삭제 요청시 RsData를 따로 반환해주는 service 메서드
+- [x] 삭제 요청시 RsData를 따로 반환해주는 service 메서드
+- [x] LikeablePersonController에서 중복되는 메서드 제거
+- [x] 메서드명 가독성 좋게 수정
+- [x] 컨트롤러에서는 메시지 전달 처리만 하도록 변경
+- [x] delete() 메소드를 @DeleteMapping("/likeablePerson/{id}로 변경)
+- [x] 삭제 요청을 delete 요청으로 보내도록 변경
+- [x] tests 코드 변경

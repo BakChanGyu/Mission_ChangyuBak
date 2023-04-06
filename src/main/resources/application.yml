@@ -1,4 +1,8 @@
 spring:
+  mvc:
+    hiddenmethod:
+      filer:
+        enabled: true
   profiles:
     active: dev
   datasource:
