@@ -35,3 +35,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### yml 개인정보 마스킹 ###
+application.properties
