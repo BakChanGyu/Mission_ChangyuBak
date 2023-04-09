@@ -74,12 +74,12 @@ public class LikeablePersonController {
         if (canActorDelete.isFail()) {
             return rq.historyBack(canActorDelete);
         }
-        RsData deleteRs = likeablePersonService.delete(likeablePerson);
+        RsData deleteRsData = likeablePersonService.delete(likeablePerson);
 
-        if (deleteRs.isFail()) {
-            return rq.historyBack(deleteRs);
+        if (deleteRsData.isFail()) {
+            return rq.historyBack(deleteRsData);
         }
-        return rq.redirectWithMsg("/likeablePerson/list", deleteRs);
+        return rq.redirectWithMsg("/likeablePerson/list", deleteRsData);
 
     }
 }
