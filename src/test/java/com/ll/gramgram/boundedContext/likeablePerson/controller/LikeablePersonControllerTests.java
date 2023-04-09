@@ -15,7 +15,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatNullPointerException;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -175,6 +174,45 @@ public class LikeablePersonControllerTests {
         LikeablePerson likeablePerson = likeablePersonService.findById(1L);
 
         assertThat(likeablePersonService.findById(1L)).isEqualTo(null);
+    }
 
+    @Test
+    @DisplayName("호감삭제(없는거 삭제, 삭제가 안되어야 함)")
+    @WithUserDetails("user3")
+    void t007() throws Exception {
+        // WHEN
+        ResultActions resultActions = mvc
+                .perform(delete("/likeablePerson/100")
+                        .with(csrf())
+                )
+                .andDo(print());
+
+        // THEN
+        resultActions
+                .andExpect(handler().handlerType(LikeablePersonController.class))
+                .andExpect(handler().methodName("delete"))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @DisplayName("호감삭제(권한이 없는경우, 삭제가 안됨")
+    @WithUserDetails("user2")
+    void t008() throws Exception {
+        // WHEN
+        ResultActions resultActions = mvc
+                .perform(delete("/likeablePerson/1")
+                        .with(csrf())
+                )
+                .andDo(print());
+
+        // THEN
+        resultActions
+                .andExpect(handler().handlerType(LikeablePersonController.class))
+                .andExpect(handler().methodName("delete"))
+                .andExpect(status().is4xxClientError());
+
+        LikeablePerson likeablePerson = likeablePersonService.findById(1L);
+
+        assertThat(likeablePersonService.findById(1L)).isNotNull();
     }
 }

@@ -59,6 +59,9 @@ public class LikeablePersonController {
             model.addAttribute("likeablePeople", likeablePeople);
         }
 
+        List<LikeablePerson> likeablePeople = instaMember.getFromLikeablePeople();
+        model.addAttribute("likeablePeople", likeablePeople);
+
         return "usr/likeablePerson/list";
     }
 
