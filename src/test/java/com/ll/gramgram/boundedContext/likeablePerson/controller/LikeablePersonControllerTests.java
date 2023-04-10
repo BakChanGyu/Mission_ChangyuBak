@@ -233,14 +233,24 @@ public class LikeablePersonControllerTests {
     }
 
     @Test
-    @DisplayName("11명 이상의 호감상대 등록 불가")
+    @DisplayName("호감상대 11명 이상 등록 불가")
     @WithUserDetails("user3")
     void t010() throws Exception {
+        // GIVEN
+        for (int i = 0; i < 8; i++) {
+            mvc
+                    .perform(post("/likeablePerson/add")
+                            .with(csrf())
+                            .param("username", "insta_user0" + i)
+                            .param("attractiveTypeCode", "1")
+                    );
+        }
+
         // WHEN
         ResultActions resultActions = mvc
                 .perform(post("/likeablePerson/add")
                         .with(csrf()) // CSRF 키 생성
-                        .param("username", "insta_user" + "a".repeat(30))
+                        .param("username", "insta_user10")
                         .param("attractiveTypeCode", "1")
                 )
                 .andDo(print());
