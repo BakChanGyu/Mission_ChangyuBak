@@ -171,9 +171,7 @@ public class LikeablePersonControllerTests {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlPattern("/likeablePerson/list**"));
 
-        LikeablePerson likeablePerson = likeablePersonService.findById(1L);
-
-        assertThat(likeablePersonService.findById(1L)).isEqualTo(null);
+        assertThat(likeablePersonService.findById(1L)).isPresent().isEqualTo(null);
     }
 
     @Test
@@ -211,8 +209,7 @@ public class LikeablePersonControllerTests {
                 .andExpect(handler().methodName("delete"))
                 .andExpect(status().is4xxClientError());
 
-        LikeablePerson likeablePerson = likeablePersonService.findById(1L);
-
-        assertThat(likeablePersonService.findById(1L)).isNotNull();
+        assertThat(likeablePersonService.findById(1L)).isPresent().isEqualTo(true);
     }
+
 }

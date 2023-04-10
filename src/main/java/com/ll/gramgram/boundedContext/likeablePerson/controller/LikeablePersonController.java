@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/likeablePerson")
@@ -68,11 +69,12 @@ public class LikeablePersonController {
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{id}")
     public String delete(@PathVariable("id") Long id) {
-        LikeablePerson likeablePerson = likeablePersonService.findById(id);
-        RsData canActorDelete = likeablePersonService.canActorDelete(rq.getMember(), likeablePerson);
+        LikeablePerson likeablePerson = likeablePersonService.findById(id).orElse(null);
 
-        if (canActorDelete.isFail()) {
-            return rq.historyBack(canActorDelete);
+        RsData canActorDeleteRsData = likeablePersonService.canActorDelete(rq.getMember(), likeablePerson);
+
+        if (canActorDeleteRsData.isFail()) {
+            return rq.historyBack(canActorDeleteRsData);
         }
         RsData deleteRsData = likeablePersonService.delete(likeablePerson);
 
@@ -80,6 +82,5 @@ public class LikeablePersonController {
             return rq.historyBack(deleteRsData);
         }
         return rq.redirectWithMsg("/likeablePerson/list", deleteRsData);
-
     }
 }
