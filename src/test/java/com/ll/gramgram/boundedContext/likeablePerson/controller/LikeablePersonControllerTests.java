@@ -231,4 +231,25 @@ public class LikeablePersonControllerTests {
                 .andExpect(handler().methodName("add"))
                 .andExpect(status().is4xxClientError());
     }
+
+    @Test
+    @DisplayName("11명 이상의 호감상대 등록 불가")
+    @WithUserDetails("user3")
+    void t010() throws Exception {
+        // WHEN
+        ResultActions resultActions = mvc
+                .perform(post("/likeablePerson/add")
+                        .with(csrf()) // CSRF 키 생성
+                        .param("username", "insta_user" + "a".repeat(30))
+                        .param("attractiveTypeCode", "1")
+                )
+                .andDo(print());
+
+        // THEN
+        resultActions
+                .andExpect(handler().handlerType(LikeablePersonController.class))
+                .andExpect(handler().methodName("add"))
+                .andExpect(status().is4xxClientError());
+
+    }
 }
