@@ -214,13 +214,13 @@ public class LikeablePersonControllerTests {
 
     @Test
     @DisplayName("중복으로 호감표시 불가")
-    @WithUserDetails("user2")
+    @WithUserDetails("user3")
     void t009() throws Exception {
         // WHEN
         ResultActions resultActions = mvc
                 .perform(post("/likeablePerson/add")
                         .with(csrf()) // CSRF 키 생성
-                        .param("username", "insta_user3")
+                        .param("username", "insta_user4")
                         .param("attractiveTypeCode", "1")
                 )
                 .andDo(print());

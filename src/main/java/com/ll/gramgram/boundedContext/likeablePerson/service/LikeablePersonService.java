@@ -7,6 +7,7 @@ import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
 import com.ll.gramgram.boundedContext.likeablePerson.repository.LikeablePersonRepository;
 import com.ll.gramgram.boundedContext.member.entity.Member;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,18 +17,25 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class LikeablePersonService {
     private final LikeablePersonRepository likeablePersonRepository;
     private final InstaMemberService instaMemberService;
 
     @Transactional
     public RsData<LikeablePerson> like(Member member, String username, int attractiveTypeCode) {
-        if ( member.hasConnectedInstaMember() == false ) {
+        if (member.hasConnectedInstaMember() == false) {
             return RsData.of("F-2", "먼저 본인의 인스타그램 아이디를 입력해야 합니다.");
         }
 
         if (member.getInstaMember().getUsername().equals(username)) {
             return RsData.of("F-1", "본인을 호감상대로 등록할 수 없습니다.");
+        }
+
+        boolean duplicated = isDuplicated(member, username);
+        log.info("duplcated : {}", duplicated);
+        if (duplicated) {
+            return RsData.of("F-3", "해당 호감상대는 이미 등록었습니다.");
         }
 
         InstaMember fromInstaMember = member.getInstaMember();
@@ -47,12 +55,25 @@ public class LikeablePersonService {
 
         // 너가 좋아하는 호감표시 생겼어
         fromInstaMember.addFromLikeablePerson(likeablePerson);
-
         // 너를 좋아하는 호감표시 생겼어
         toInstaMember.addToLikeablePerson(likeablePerson);
 
-        return RsData.of("S-1", "입력하신 인스타유저(%s)를 호감상대로 등록되었습니다.".formatted(username), likeablePerson);
+        log.info("리스트: {}", likeablePerson.getFromInstaMember());
+        log.info("사이즈= {}", member.getInstaMember().getToLikeablePeople().size());
 
+
+        return RsData.of("S-1", "입력하신 인스타유저(%s)를 호감상대로 등록되었습니다.".formatted(username), likeablePerson);
+    }
+
+    private boolean isDuplicated(Member member, String username) {
+        List<LikeablePerson> likeablePeople = member.getInstaMember().getFromLikeablePeople();
+
+        for (LikeablePerson likeablePerson : likeablePeople) {
+            if (likeablePerson.getToInstaMember().getUsername().equals(username)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public List<LikeablePerson> findByFromInstaMemberId(Long fromInstaMemberId) {
