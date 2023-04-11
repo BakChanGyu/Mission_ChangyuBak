@@ -30,11 +30,6 @@ public class LikeablePersonService {
             return RsData.of("F-1", "본인을 호감상대로 등록할 수 없습니다.");
         }
 
-        boolean duplicated = isDuplicated(member, username);
-        if (duplicated) {
-            return RsData.of("F-3", "해당 호감상대는 이미 등록되었습니다.");
-        }
-
         if (member.getInstaMember().getFromLikeablePeople().size() >= 10) {
             return RsData.of("F-4", "11명 이상의 호감상대를 등록할 수 없습니다.");
         }
@@ -59,17 +54,6 @@ public class LikeablePersonService {
         toInstaMember.addToLikeablePerson(likeablePerson);
 
         return RsData.of("S-1", "입력하신 인스타유저(%s)를 호감상대로 등록되었습니다.".formatted(username), likeablePerson);
-    }
-
-    private boolean isDuplicated(Member member, String username) {
-        List<LikeablePerson> likeablePeople = member.getInstaMember().getFromLikeablePeople();
-
-        for (LikeablePerson likeablePerson : likeablePeople) {
-            if (likeablePerson.getToInstaMember().getUsername().equals(username)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public List<LikeablePerson> findByFromInstaMemberId(Long fromInstaMemberId) {
@@ -101,5 +85,35 @@ public class LikeablePersonService {
         }
 
         return RsData.of("S-1", "삭제가능합니다.");
+    }
+
+    public boolean isDuplicated(LikeablePerson likeablePerson, String username) {
+
+        if (likeablePerson.getToInstaMember().getUsername().equals(username)) {
+            return true;
+        }
+        return false;
+    }
+
+    @Transactional
+    public RsData update(LikeablePerson likeablePerson, int attractiveTypeCode) {
+        likeablePerson.setAttractiveTypeCode(attractiveTypeCode);
+        likeablePersonRepository.save(likeablePerson);
+
+        return RsData.of("S-1", "호감상대의 사유를 수정했습니다.");
+    }
+
+    public RsData canActorUpdate(Member actor, String username, int attractiveTypeCode) {
+        Optional<LikeablePerson> opLikeablePerson = actor.getInstaMember().getFromLikeablePeople().stream()
+                .filter(e -> isDuplicated(e, username))
+                .findAny();
+
+        if (opLikeablePerson.isPresent()) {
+            if (opLikeablePerson.get().getAttractiveTypeCode() != attractiveTypeCode) {
+                return RsData.of("S-1", "수정가능합니다.", opLikeablePerson.get());
+            }
+            return RsData.of("F-3", "이미 등록된 호감상대입니다.");
+        }
+        return RsData.of("S-1", "등록가능합니다.");
     }
 }

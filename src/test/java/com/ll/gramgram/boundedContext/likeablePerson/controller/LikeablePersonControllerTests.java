@@ -1,7 +1,5 @@
 package com.ll.gramgram.boundedContext.likeablePerson.controller;
 
-
-import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
 import com.ll.gramgram.boundedContext.likeablePerson.service.LikeablePersonService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -171,7 +169,7 @@ public class LikeablePersonControllerTests {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlPattern("/likeablePerson/list**"));
 
-        assertThat(likeablePersonService.findById(1L)).isPresent().isEqualTo(null);
+        assertThat(likeablePersonService.findById(1L).isPresent()).isEqualTo(false);
     }
 
     @Test
@@ -209,7 +207,7 @@ public class LikeablePersonControllerTests {
                 .andExpect(handler().methodName("delete"))
                 .andExpect(status().is4xxClientError());
 
-        assertThat(likeablePersonService.findById(1L)).isPresent().isEqualTo(true);
+        assertThat(likeablePersonService.findById(1L).isPresent()).isEqualTo(true);
     }
 
     @Test
@@ -260,6 +258,26 @@ public class LikeablePersonControllerTests {
                 .andExpect(handler().handlerType(LikeablePersonController.class))
                 .andExpect(handler().methodName("add"))
                 .andExpect(status().is4xxClientError());
+    }
 
+    @Test
+    @DisplayName("다른 사유로 호감 표시하는 경우 사유 수정")
+    @WithUserDetails("user3")
+    void t011() throws Exception {
+        // WHEN
+        ResultActions resultActions = mvc
+                .perform(post("/likeablePerson/add")
+                        .with(csrf()) // CSRF 키 생성
+                        .param("username", "insta_user4")
+                        .param("attractiveTypeCode", "2")
+                )
+                .andDo(print());
+
+        // THEN
+        resultActions
+                .andExpect(handler().handlerType(LikeablePersonController.class))
+                .andExpect(handler().methodName("add"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("/likeablePerson/list**"));
     }
 }
