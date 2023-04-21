@@ -36,5 +36,7 @@ out/
 ### VS Code ###
 .vscode/
 
+### Custom ###
 ### yml 개인정보 마스킹 ###
 application.properties
+src/main/generated

@@ -108,7 +108,7 @@ public class LikeablePersonService {
             return RsData.of("F-3", "이미 %s님에 대해서 호감표시를 했습니다.".formatted(username));
         }
 
-        long likeablePersonFromMax = AppConfig.getLikeablPersonFromMax();
+        long likeablePersonFromMax = AppConfig.getLikeablePersonFromMax();
 
         // 중복인 경우
         if (fromLikeablePerson != null) {

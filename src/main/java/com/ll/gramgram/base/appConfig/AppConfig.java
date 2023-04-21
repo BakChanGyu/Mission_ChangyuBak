@@ -5,10 +5,11 @@ import org.springframework.beans.factory.annotation.Value;
 
 public class AppConfig {
     @Getter
-    private static long likeablPersonFromMax;
+    private static long likeablePersonFromMax;
+
 
     @Value("${custom.likeablePerson.from.max}")
-    public void setLikeablPersonFromMax(long likeablPersonFromMax) {
-        AppConfig.likeablPersonFromMax = likeablPersonFromMax;
+    public void setLikeablePersonFromMax(long likeablPersonFromMax) {
+        AppConfig.likeablePersonFromMax = likeablPersonFromMax;
     }
 }
