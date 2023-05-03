@@ -15,9 +15,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -58,7 +55,6 @@ public class LikeablePersonService {
 
         // 너를 좋아하는 호감표시 생겼어.
         toInstaMember.addToLikeablePerson(likeablePerson);
-        // TODO: 누가 나를 좋아한대!! or 나에대한 호감 사유가 변경됐어!
 
         publisher.publishEvent(new EventAfterLike(this, likeablePerson));
 
@@ -235,6 +231,4 @@ public class LikeablePersonService {
 
         return RsData.of("S-1","호감표시 삭제 및 변경 가능합니다.");
     }
-
-// TODO: 호감사유 변경시 알림. 호감상대 등록됐을시 알림.
 }
