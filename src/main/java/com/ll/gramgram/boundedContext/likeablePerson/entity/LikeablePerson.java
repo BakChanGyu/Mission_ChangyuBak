@@ -13,7 +13,6 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 
 @Entity
 @Getter
@@ -21,7 +20,6 @@ import java.time.temporal.ChronoUnit;
 @SuperBuilder
 @ToString(callSuper = true)
 public class LikeablePerson extends BaseEntity {
-    // 락이 풀리는 시간
     private LocalDateTime modifyUnlockDate;
 
     @ManyToOne
@@ -42,11 +40,7 @@ public class LikeablePerson extends BaseEntity {
 
     // 초 단위에서 올림 해주세요.
     public String getModifyUnlockDateRemainStrHuman() {
-        long remainingTimeForModification = LocalDateTime.now().until(modifyUnlockDate, ChronoUnit.MINUTES);
-        long remainingHours = remainingTimeForModification / 60;
-        long remainingMinutes = remainingTimeForModification % 60;
-
-        return "%s시간 %s분".formatted(remainingHours, remainingMinutes);
+        return Ut.time.diffFormat1Human(LocalDateTime.now(), modifyUnlockDate);
     }
 
     public RsData updateAttractionTypeCode(int attractiveTypeCode) {
