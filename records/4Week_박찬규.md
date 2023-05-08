@@ -4,7 +4,7 @@
 
 ---
 필수미션:
-- [ ] 내가 받은 호감리스트 (/usr/likeablePerson/toList)에서 성별 필터링기능 구현
+- [x] 내가 받은 호감리스트 (/usr/likeablePerson/toList)에서 성별 필터링기능 구현
 - [ ] 네이버 클라우드 플랫폼을 통한 배포, 도메인, HTTPS 까지 적용
 
 추가미션:

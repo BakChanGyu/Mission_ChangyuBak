@@ -64,6 +64,17 @@ public class NotProd {
                 Ut.reflection.setFieldValue(likeablePersonToInstaUser100, "modifyUnlockDate", LocalDateTime.now().minusSeconds(1));
 
                 LikeablePerson likeablePersonToInstaUserAbcd = likeablePersonService.like(memberUser3, "insta_user_abcd", 2).getData();
+
+                // 테스트용
+                instaMemberService.connect(memberUser6ByKakao, "1111", "W");
+                instaMemberService.connect(memberUser8ByNaver, "2222", "M");
+                instaMemberService.connect(memberUser7ByGoogle, "3333", "W");
+                instaMemberService.connect(memberUser9ByFacebook, "4444", "M");
+
+                likeablePersonService.like(memberUser6ByKakao, "1234", 1);
+                likeablePersonService.like(memberUser8ByNaver, "1111", 2);
+                likeablePersonService.like(memberUser7ByGoogle, "1111", 2);
+                likeablePersonService.like(memberUser9ByFacebook, "1111", 1);
             }
         };
     }
