@@ -54,14 +54,6 @@ public class LikeablePerson extends BaseEntity {
         return RsData.of("S-1", "성공");
     }
 
-    public String getGender() {
-        return switch (toInstaMember.getGender()) {
-            case "M" -> "남자";
-            case "W" -> "여자";
-            default -> "능력";
-        };
-    }
-
     public String getAttractiveTypeDisplayName() {
         return switch (attractiveTypeCode) {
             case 1 -> "외모";

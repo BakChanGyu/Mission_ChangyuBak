@@ -221,14 +221,30 @@ public class LikeablePersonService {
         return RsData.of("S-1", "호감사유변경이 가능합니다.");
     }
 
-    public List<LikeablePerson> filtering(InstaMember instaMember, String gender, String attractiveTypeCode, int sortCode) {
+    public List<LikeablePerson> filter(InstaMember instaMember, String gender, Integer attractiveTypeCode, Integer sortCode) {
         List<LikeablePerson> likeablePeople = instaMember.getToLikeablePeople();
+
         if (gender != null && !gender.isEmpty()) {
-            return likeablePeople.stream()
-                    .filter(likeablePerson ->
-                            likeablePerson.getFromInstaMember().getGender().equals(gender))
-                    .collect(Collectors.toList());
+            likeablePeople = filterToGender(likeablePeople, gender);
         }
+        if (attractiveTypeCode != null) {
+            likeablePeople = filterToAttractiveTypeCode(likeablePeople, attractiveTypeCode);
+        }
+
         return likeablePeople;
+    }
+
+    private List<LikeablePerson> filterToAttractiveTypeCode(List<LikeablePerson> likeablePeople, int attractiveTypeCode) {
+        return likeablePeople.stream()
+                .filter(likeablePerson ->
+                        likeablePerson.getAttractiveTypeCode() == attractiveTypeCode)
+                .collect(Collectors.toList());
+    }
+
+    private List<LikeablePerson> filterToGender(List<LikeablePerson> likeablePeople, String gender) {
+        return likeablePeople.stream()
+                .filter(likeablePerson ->
+                        likeablePerson.getFromInstaMember().getGender().equals(gender))
+                .collect(Collectors.toList());
     }
 }
