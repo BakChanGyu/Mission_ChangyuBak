@@ -15,9 +15,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -221,7 +219,7 @@ public class LikeablePersonService {
         return RsData.of("S-1", "호감사유변경이 가능합니다.");
     }
 
-    public List<LikeablePerson> filter(InstaMember instaMember, String gender, Integer attractiveTypeCode, Integer sortCode) {
+    public List<LikeablePerson> filter(InstaMember instaMember, String gender, Integer attractiveTypeCode, int sortCode) {
         List<LikeablePerson> likeablePeople = instaMember.getToLikeablePeople();
 
         if (gender != null && !gender.isEmpty()) {
@@ -230,8 +228,45 @@ public class LikeablePersonService {
         if (attractiveTypeCode != null) {
             likeablePeople = filterToAttractiveTypeCode(likeablePeople, attractiveTypeCode);
         }
+        likeablePeople = filterToSortCode(likeablePeople, sortCode);
 
         return likeablePeople;
+    }
+
+    private List<LikeablePerson> filterToSortCode(List<LikeablePerson> likeablePeople, int sortCode) {
+        /**
+         * 최신순(기본) : 1, 가장 최근에 받은 호감표시를 우선적으로 표시
+         * 날짜순 : 2, 가장 오래전에 받은 호감표시를 우선적으로 표시
+         * 인기 많은 순 : 3, 가장 인기가 많은 사람들의 호감표시를 우선적으로 표시
+         * 인기 적은 순 : 4, 가장 인기가 적은 사람들의 호감표시를 우선적으로 표시
+         * 성별순 : 5, 여성에게 받은 호감표시를 먼저 표시하고, 그 다음 남자에게 받은 호감을 표시
+         * 2순위 정렬조건으로는 최신순
+         * 호감사유순 : 6, 외모 때문에 받은 호감을 먼저 표시하고, 그 다음 성격 때문에 받은 호감표시를 후에 표시,
+         * 마지막으로 능력 때문에 받은 호감표시을 표시
+         */
+        return switch (sortCode) {
+            case 2 -> {
+                Collections.reverse(likeablePeople);
+                yield likeablePeople;
+            }
+            case 3 -> likeablePeople.stream()
+                        .sorted((e1, e2) ->
+                                (int) (e2.getFromInstaMember().getLikes() - e1.getFromInstaMember().getLikes()))
+                        .collect(Collectors.toList());
+            case 4 -> likeablePeople.stream()
+                    .sorted((e1, e2) ->
+                            (int) (e1.getFromInstaMember().getLikes() - e2.getFromInstaMember().getLikes()))
+                    .collect(Collectors.toList());
+            case 5 -> likeablePeople.stream()
+                    .sorted(Comparator.comparing((LikeablePerson e) -> e.getFromInstaMember().getGender()).reversed()
+                            .thenComparing(Comparator.comparing(LikeablePerson::getCreateDate).reversed()))
+                    .collect(Collectors.toList());
+            case 6 -> likeablePeople.stream()
+                    .sorted((e1, e2) ->
+                            e1.getAttractiveTypeCode() - e2.getAttractiveTypeCode())
+                    .collect(Collectors.toList());
+            default -> likeablePeople;
+        };
     }
 
     private List<LikeablePerson> filterToAttractiveTypeCode(List<LikeablePerson> likeablePeople, int attractiveTypeCode) {

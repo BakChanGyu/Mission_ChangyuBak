@@ -71,10 +71,13 @@ public class NotProd {
                 instaMemberService.connect(memberUser7ByGoogle, "3333", "W");
                 instaMemberService.connect(memberUser9ByFacebook, "4444", "M");
 
-                likeablePersonService.like(memberUser6ByKakao, "1234", 1);
+                likeablePersonService.like(memberUser6ByKakao, "2222", 1);
                 likeablePersonService.like(memberUser8ByNaver, "1111", 2);
-                likeablePersonService.like(memberUser7ByGoogle, "1111", 2);
-                likeablePersonService.like(memberUser9ByFacebook, "1111", 1);
+
+                LikeablePerson likeablePersonTest1 = likeablePersonService.like(memberUser7ByGoogle, "1111", 2).getData();
+                Ut.reflection.setFieldValue(likeablePersonTest1, "modifyUnlockDate", LocalDateTime.now().minusHours(1));
+                LikeablePerson likeablePersonTest2 = likeablePersonService.like(memberUser9ByFacebook, "1111", 1).getData();
+                Ut.reflection.setFieldValue(likeablePersonTest2, "createDate", LocalDateTime.now().minusHours(2));
             }
         };
     }
