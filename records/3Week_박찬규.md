@@ -19,7 +19,7 @@
 **[접근 방법]**
 
 1. 네이버 클라우드 플랫폼을 통한 배포부터 시작했다가, 3Week를 배포하기 위해 docker 설치까지만 진행.
-2. 3시가 쿨타임 기능 구현을 위해 강사님의 코드를 분석했다. 쿨타임 기능이 들어가있는 LikeableService, LikeableController, LikeableServiceTest, AppConfig, list.html을 중점적으로 확인했다.
+2. 3시간 쿨타임 기능 구현을 위해 강사님의 코드를 분석했다. 쿨타임 기능이 들어가있는 LikeableService, LikeableController, LikeableServiceTest, AppConfig, list.html을 중점적으로 확인했다.
 3. 현재 시간과 modifyUnlockDate를 비교하여, 변경 후 3시간이 지나지 않았다면 수정이 불가하게끔 했다.
 
 

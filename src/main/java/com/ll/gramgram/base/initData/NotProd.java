@@ -66,6 +66,8 @@ public class NotProd {
                 LikeablePerson likeablePersonToInstaUserAbcd = likeablePersonService.like(memberUser3, "insta_user_abcd", 2).getData();
 
                 // 테스트용
+                likeablePersonService.like(memberUser2, "insta_user4", 2);
+
                 instaMemberService.connect(memberUser6ByKakao, "1111", "W");
                 instaMemberService.connect(memberUser8ByNaver, "2222", "M");
                 instaMemberService.connect(memberUser7ByGoogle, "3333", "W");
@@ -73,11 +75,8 @@ public class NotProd {
 
                 likeablePersonService.like(memberUser6ByKakao, "2222", 1);
                 likeablePersonService.like(memberUser8ByNaver, "1111", 2);
-
-                LikeablePerson likeablePersonTest1 = likeablePersonService.like(memberUser7ByGoogle, "1111", 2).getData();
-                Ut.reflection.setFieldValue(likeablePersonTest1, "modifyUnlockDate", LocalDateTime.now().minusHours(1));
-                LikeablePerson likeablePersonTest2 = likeablePersonService.like(memberUser9ByFacebook, "1111", 1).getData();
-                Ut.reflection.setFieldValue(likeablePersonTest2, "createDate", LocalDateTime.now().minusHours(2));
+                likeablePersonService.like(memberUser7ByGoogle, "1111", 2);
+                likeablePersonService.like(memberUser9ByFacebook, "1111", 1);
             }
         };
     }
